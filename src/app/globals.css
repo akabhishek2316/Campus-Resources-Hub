@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: rgba(27, 63, 139, 0.15);
+  }
+  a,
+  button,
+  summary,
+  label,
+  select,
+  input[type='checkbox'],
+  input[type='radio'] {
+    touch-action: manipulation;
+  }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+  h1 {
+    @apply font-serif text-2xl font-semibold tracking-tight text-bench-dark sm:text-3xl;
+  }
+  h2 {
+    @apply text-lg font-semibold;
+  }
+  a {
+    @apply underline-offset-2;
+  }
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-bench;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-paper-card border border-paper-line rounded-xl p-4 shadow-sm sm:p-5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-paper-line bg-white px-4 py-2 text-sm font-medium text-ink transition duration-100 hover:bg-bench-light active:translate-y-px active:scale-[0.97] active:shadow-inner disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply border-bench bg-bench text-white hover:bg-bench-dark active:bg-bench-dark;
+  }
+  .btn-gold {
+    @apply border-gold bg-gold text-bench-dark font-semibold hover:bg-gold-dark hover:text-white;
+  }
+  .btn-danger {
+    @apply border-rust bg-white text-rust hover:bg-rust-light;
+  }
+  .input {
+    @apply w-full rounded-lg border border-paper-line bg-white px-3 py-2 text-sm placeholder:text-ink-mute focus:border-bench;
+  }
+  .label {
+    @apply mb-1 block text-sm font-medium text-ink-soft;
+  }
+  .hint {
+    @apply text-xs text-ink-mute;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium;
+  }
+  .th {
+    @apply px-3 py-2 text-left text-xs font-medium text-ink-mute;
+  }
+  .td {
+    @apply px-3 py-2 text-sm align-top;
+  }
+}
+
+@layer utilities {
+  /* Pressed look for a button whose action is running */
+  .is-pending {
+    @apply cursor-wait opacity-90 ring-2 ring-gold/70 ring-offset-1;
+  }
+}
+
+@keyframes nav-progress {
+  0% {
+    width: 0;
+  }
+  20% {
+    width: 35%;
+  }
+  60% {
+    width: 70%;
+  }
+  100% {
+    width: 92%;
+  }
+}
+.nav-progress-run {
+  animation: nav-progress 6s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+main {
+  animation: page-in 160ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  main {
+    animation: none;
+  }
+  .nav-progress-run {
+    animation-duration: 0.01s;
+  }
+}
