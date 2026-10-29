@@ -1,255 +1,484 @@
-# ResourcesHub
+<div align="center">
 
-A trusted platform for a college to share its underused labs, tools and rooms. It is built for the "Unlock Underused Equipment and Spaces" hackathon problem and covers the whole lifecycle:
-list, discover, request, verify, review, approve or waitlist, check in, return, handle incidents, and read the full history.
+# 🏛️ ResourcesHub
 
-**Stack:** Next.js 14 (App Router) + TypeScript + Tailwind CSS, Supabase (Postgres, Auth, Storage, Row Level Security). Optional Gemini AI.
+### Unlock your campus's underused labs, tools and rooms: fairly, safely and with a full audit trail.
+
+[![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%7C%20Auth%20%7C%20Storage-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+
+**[🔗 Live Demo](#-live-demo)** · **[🎬 Demo Video](#-live-demo)** · **[🧪 Judge Walkthrough](#-5-minute-judge-walkthrough)** · **[⚙️ Setup](#-getting-started)**
+
+</div>
 
 ---
 
-## 1. What you need
+## 📌 Table of Contents
 
-- Node.js 20.6 or newer (`node -v`)
-- A free Supabase account: https://supabase.com
-- Optional: a free Gemini API key from https://aistudio.google.com/apikey (the app works without it)
+- [The Problem](#-the-problem)
+- [Our Solution](#-our-solution)
+- [Live Demo](#-live-demo)
+- [Key Features](#-key-features)
+- [How It Works](#-how-it-works)
+- [Fairness Engine](#-fairness-engine)
+- [Responsible AI](#-responsible-ai)
+- [Architecture](#-architecture)
+- [Security and Privacy](#-security-and-privacy)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Demo Accounts](#-demo-accounts)
+- [5-Minute Judge Walkthrough](#-5-minute-judge-walkthrough)
+- [Hackathon Criteria Mapping](#-hackathon-criteria-mapping)
+- [Deployment](#-deployment)
+- [Project Structure](#-project-structure)
+- [Team and Contribution Workflow](#-team-and-contribution-workflow)
+- [Known Limitations](#-known-limitations)
+- [Roadmap](#-roadmap)
+- [Troubleshooting](#-troubleshooting)
+- [Disclosure](#-disclosure)
 
-## 2. Setup, step by step (about 10 minutes)
+---
 
-**Step 1. Create a Supabase project.** Choose any name and region, and save the database password.
+## 🎯 The Problem
 
-**Step 2. Create the database.** In Supabase open **SQL Editor > New query**, paste the whole of `supabase/schema.sql`, and press **Run**. It creates all tables, security rules, the audit log protection, the double-booking guard and the private `evidence` storage bucket.
+Every college has 3D printers, oscilloscopes, DSLR kits, GPU workstations, soldering stations and seminar halls that sit **idle most of the week**, while students and project teams elsewhere on the same campus **cannot afford or access** them.
 
-**Step 3. Turn off email confirmation** (so sign-up works instantly during the demo): **Authentication > Providers > Email > turn off "Confirm email" > Save**.
+Owners (lab heads, department staff) default to saying *"no"* because they fear **damage, misuse and unfair use**, and nobody knows what equipment exists or who to ask.
 
-**Step 4. Copy your keys.** Go to **Project Settings > API** and copy the Project URL, the `anon` key and the `service_role` key.
+> **Hackathon problem statement:** *Unlock Underused Equipment and Spaces*
 
-**Step 5. Configure the app.** In the project folder:
+## 💡 Our Solution
 
-```bash
-cp .env.example .env.local        # Windows PowerShell: copy .env.example .env.local
+**ResourcesHub** is a trust-first booking platform for shared campus resources. It turns *"no, I'm scared of damage"* into *"yes, with guardrails"* by building trust into every step:
+
+| Owner's fear | How ResourcesHub answers it |
+|---|---|
+| "I don't know who this person is" | ID verification and admin-reviewed owner applications |
+| "They aren't trained to use it" | Training proofs checked automatically on every request |
+| "Two groups want the same slot" | Transparent priority score, waitlist and a database-level double-booking guard |
+| "They might break it and deny it" | OTP handover with **before and after condition photos** |
+| "Who decided that?" | Human decisions with mandatory reasons and an **append-only audit log** |
+
+**No access, safety or penalty decision is ever automatic.** AI assists; humans decide.
+
+---
+
+## 🌐 Live Demo
+
+| | |
+|---|---|
+| 🔗 **Deployed app** | `https://<your-app>.vercel.app` *(add your link)* |
+| 🎬 **Demo video** | `https://<your-video-link>` *(add your link)* |
+| 📊 **Presentation** | `https://<your-slides-link>` *(add your link)* |
+
+> Sign in with the [demo accounts](#-demo-accounts). All demo data is fictional.
+
+<!--
+Add screenshots here, for example:
+![Landing page](docs/screenshots/landing.png)
+![Resource discovery](docs/screenshots/resources.png)
+![Booking timeline](docs/screenshots/booking.png)
+![Admin dashboard](docs/screenshots/admin.png)
+-->
+
+---
+
+## ✨ Key Features
+
+### 🎓 For Students and Project Teams
+- **Discover** equipment and spaces with search, filters and **Smart Match** (describe your need in plain English)
+- **Instant eligibility feedback**: see exactly what is missing (for example, *Missing: 3D printer safety*)
+- **Request** a slot with a purpose; see your **priority score** and **waitlist rank** (for example, "#2 of 3")
+- **OTP check-in** and **condition report** (rating, notes, photo) before and after use
+- **In-app notifications** for approvals, waitlist moves, reminders and incidents
+
+### 🔬 For Resource Owners and Managers
+- **List a resource** with location, rules, availability, required trainings and eligibility
+- **Review queue** with side-by-side priority scores; approve, reject or waitlist, **always with a reason**
+- **Team management**: invite managers by one-time link (7-day expiry, stored as a SHA-256 hash)
+- **Check-in and return** handled by managers via OTP verification
+- Three owner types shown everywhere: **College staff**, **Organisation or business**, **Individual**
+
+### 🛡️ For Admins
+- **Registration queue**: verify student ID cards and owner documents
+- **Training approvals**: review certificates; approve owner-requested new trainings
+- **User management**: search, filter, view profiles, **deactivate or reactivate** accounts (blocks sign-in, cancels open bookings, hides listings)
+- **Audit log** and **Statistics** dashboards
+
+### ⚖️ Trust and Safety (built-in)
+- Automatic incident flags: **late return, rating drop, damage tick**
+- **Human-reviewed incidents**: AI-summarised evidence (advisory only), then resolved as *no action*, *warning* or *7-day suspension*
+- **Immutable audit trail**: a database trigger rejects edits and deletes
+
+---
+
+## 🔄 How It Works
+
+```mermaid
+flowchart LR
+    A[List resource] --> B[Discover and search]
+    B --> C[Request slot]
+    C --> D{Automatic checks}
+    D -- Not eligible --> X[Blocked with exact reasons]
+    D -- Eligible --> E[Owner or manager review]
+    E -- Approve --> F[Student records condition and gets OTP]
+    E -- Waitlist --> W[Waitlist with reason]
+    E -- Reject --> R[Rejected with reason]
+    F --> G[Staff verify OTP and check in]
+    G --> H[Student returns and records condition]
+    H --> I[Staff confirm return]
+    I --> J{Issue found?}
+    J -- Yes --> K[Incident reviewed by a human]
+    J -- No --> L[Shared history and audit log]
+    K --> L
+    W -. cancellation .-> E
 ```
 
-Open `.env.local` and fill in the three Supabase values. Leave the rest as is, or add `GEMINI_API_KEY`. If your college is not in India, change `NEXT_PUBLIC_TZ_OFFSET_MIN` (minutes from UTC; India is 330).
+---
 
-**Step 6. Install, seed and run:**
+## ⚖️ Fairness Engine
 
-```bash
-npm install
-npm run seed      # creates demo users and fictional demo data
-npm run dev       # open http://localhost:3000
+All rules are **visible to the user**. Nothing is hidden.
+
+```
+Priority = purpose weight + waiting time bonus − recent use penalty
+
+  purpose weight : course project 50 · research 40 · personal 20
+  waiting bonus  : +2 per day waited (max +10)
+  recent use     : −2 per hour used in the last 30 days (max −30)
 ```
 
-You can run `npm run seed` again safely; it refreshes the demo users and will not duplicate data.
+- **Weekly hour cap** and **active-booking limit** per user
+- **One booking per day** on high-demand items
+- When two requests compete, the owner sees **both scores**; the student sees their own breakdown
+- The owner can always decide differently, but **must give a reason**, and it is logged
 
-## 2a. Upgrading from the previous version
+## 🤖 Responsible AI
 
-If you already ran the old schema, run `supabase/migration_002_role_applications.sql` if role-application columns are missing, then run `supabase/migration_003_owner_manager_invites.sql` in Supabase SQL Editor. For a fresh database, run the complete updated `supabase/schema.sql`.
+AI is used **lightly** and is **never the decision-maker**.
 
-## 2b. How registration and roles work
-
-1. Public **Register** offers only **Student** and **Resource Owner**.
-2. **Students** give a college email and college ID number.
-3. **Resource owners** give job title and employee ID, and upload a **resume or CV** and a **staff ID card or appointment letter** (PDF, Word or photo, up to 3 MB each).
-4. New accounts do not grant themselves privileged roles. The admin reviews and approves owner applications.
-5. A verified owner can open **Team management** and create a one-time manager invitation. The link expires after 7 days and must be shared privately; no email provider is configured.
-6. A manager must accept with the invited email. A manager can have only one active owner assignment; the owner can revoke access.
-7. Managers can only act on resources assigned to them, and server actions check their booking, check-in/return, and incident permissions.
-8. Every submission and every decision is written to the audit log.
-
-## 3. Demo accounts
-
-All passwords are `Demo@1234`.
-
-| Email | Role | Good for showing |
+| Use | With `GEMINI_API_KEY` | Without a key |
 |---|---|---|
-| `student1@demo.edu` | Student, verified, **no training** | Eligibility failure, OTP, check-in and return |
-| `student2@demo.edu` | Student, verified, **has 3D printer and electronics training** | A student who passes the checks; competing requests |
-| `student3@demo.edu` | Student, **not verified**, request pending | Verification gate; shows in the admin's registration queue |
-| `applicant.owner@demo.edu` | Applied to become a **lab owner**, documents uploaded, pending | Admin review of job documents |
+| **Smart Match** (resource search) | Gemini interprets natural-language needs | Keyword matching fallback |
+| **Incident summary** | Gemini summarises the evidence | Plain recap fallback |
+
+AI **never** approves, rejects, penalises or suspends anyone.
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client[Browser]
+        UI[Next.js 14 App Router and Tailwind UI]
+    end
+    subgraph Server[Next.js Server]
+        MW[Middleware: session refresh]
+        SA[Server Actions: the only code that writes data]
+        AI[Gemini optional]
+    end
+    subgraph Supabase
+        AUTH[Auth]
+        DB[(Postgres with RLS)]
+        ST[(Private Storage: evidence bucket)]
+    end
+    UI --> MW --> SA
+    SA -->|role and ownership checks first| DB
+    SA --> AUTH
+    SA --> ST
+    SA -.-> AI
+    DB -->|trigger| AUDIT[(Append-only audit_log)]
+    DB -->|exclusion constraint| GUARD[No double-booking]
+```
+
+**Design principle:** every write goes through a server action that first checks *who the person is* and *their relationship to the resource*, and only then uses the service key. The browser never receives the service key.
+
+## 🔐 Security and Privacy
+
+- **Row Level Security** on every table
+- **Private storage** with short-lived **signed URLs**; proofs visible only to admins
+- **Service-role key is server-only**
+- **Postgres exclusion constraint** makes double-booking impossible, even under race conditions
+- **Append-only audit log** enforced by a database trigger
+- **Role checks** on the server for every sensitive action (booking decisions, check-in, incidents)
+- **No privilege self-grant**: public signup offers only Student and Resource Owner; owners are admin-verified; managers join only via owner-issued, single-use, expiring invitations
+- Only necessary data collected; all demo data is fictional
+
+---
+
+## 🧰 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | **Next.js 14** (App Router, Server Actions) |
+| Language | **TypeScript** |
+| Styling | **Tailwind CSS**, IBM Plex fonts via `next/font` |
+| Database and Auth | **Supabase** (Postgres, Auth, Storage, RLS) |
+| AI (optional) | **Google Gemini** |
+| Hosting | **Vercel** |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js 20.6+** (`node -v`)
+- A free **[Supabase](https://supabase.com)** account
+- *(Optional)* a free **[Gemini API key](https://aistudio.google.com/apikey)**; the app works without it
+
+### 1. Clone and install
+```bash
+git clone https://github.com/akabhishek2316/Campus-Resources-Hub.git
+cd Campus-Resources-Hub
+npm install
+```
+
+### 2. Create the database
+1. Create a new Supabase project (save the database password).
+2. Open **SQL Editor → New query**, paste the whole of [`supabase/schema.sql`](supabase/schema.sql), and press **Run**.
+   It creates all tables, RLS policies, the audit-log protection, the double-booking guard and the private `evidence` storage bucket.
+3. Go to **Authentication → Providers → Email** and turn **off** "Confirm email" so sign-up works instantly during the demo.
+4. Go to **Project Settings → API** and copy the **Project URL**, the **anon** key and the **service_role** key.
+
+### 3. Configure environment
+```bash
+# macOS / Linux
+cp .env.example .env.local
+
+# Windows PowerShell
+copy .env.example .env.local
+```
+Open `.env.local` and fill in the three Supabase values. See [Environment Variables](#-environment-variables).
+
+### 4. Seed demo data and run
+```bash
+npm run seed     # creates demo users and fictional demo data (safe to re-run)
+npm run dev      # open http://localhost:3000
+```
+
+> 💡 `npm run dev` compiles each page on first open, so it feels slower. For demos use:
+> ```bash
+> npm run build && npm start
+> ```
+
+### Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm start` | Run the production build |
+| `npm run seed` | Create or refresh demo users and data |
+
+### Upgrading an existing database
+Run the migrations in order in the Supabase SQL Editor, only for the ones your database is missing:
+
+`migration_002_role_applications.sql` → `003_owner_manager_invites.sql` → `004_owner_verification_types.sql` → `005_student_college_id_upload.sql` → `006_account_status.sql` → `007_training_requests.sql`
+
+A fresh database only needs the latest `schema.sql`.
+
+---
+
+## 🔑 Environment Variables
+
+| Variable | Required | Description |
+|---|:---:|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon (public) key |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Service-role key. **Server only. Never expose or commit it.** |
+| `NEXT_PUBLIC_TZ_OFFSET_MIN` | ➖ | College time zone offset from UTC in minutes (India = `330`) |
+| `NEXT_PUBLIC_TZ_LABEL` | ➖ | Time zone label shown in the UI |
+| `NEXT_PUBLIC_COLLEGE_NAME` | ➖ | Full college name used in header, footer, login and landing page |
+| `NEXT_PUBLIC_COLLEGE_SHORT` | ➖ | Short college name |
+| `NEXT_PUBLIC_SITE_URL` | ➖ | Public base URL, used for absolute manager invitation links |
+| `ALLOWED_EMAIL_DOMAIN` | ➖ | Restrict sign-ups to one email domain (empty = allow any) |
+| `GEMINI_API_KEY` | ➖ | Enables Smart Match and incident summaries |
+| `GEMINI_MODEL` | ➖ | Gemini model name |
+| `CRON_SECRET` | ➖ | Protects `/api/cron`; call with header `x-cron-secret: <value>` |
+
+---
+
+## 👥 Demo Accounts
+
+All passwords: **`Demo@1234`**
+
+| Email | Role | Best for showing |
+|---|---|---|
+| `student1@demo.edu` | Student (verified, **no training**) | Eligibility failure, OTP, check-in and return |
+| `student2@demo.edu` | Student (verified, **has 3D printer and electronics training**) | Passing checks, competing requests |
+| `student3@demo.edu` | Student (**not verified**) | Verification gate, admin registration queue |
+| `applicant.owner@demo.edu` | Owner applicant (pending) | Admin review of owner documents |
 | `owner@demo.edu` | Lab owner | Listing, review queue, approvals with reasons |
-| `manager@demo.edu` | Manager assigned to the demo owner | OTP check-in, return confirmation, incidents |
-| `admin@demo.edu` | Admin | Verification, training proofs, roles, audit log, statistics |
+| `manager@demo.edu` | Manager | OTP check-in, return confirmation, incidents |
+| `admin@demo.edu` | Admin | Verification, trainings, users, audit log, statistics |
 
-Seeded data (dates are set relative to today): 6 resources, one approved booking with a waitlisted rival (GPU workstation), one pending request (DSLR), one approved booking ready for check-in (Seminar Hall), and one returned booking with two open incidents (oscilloscope).
+**Seeded data** (dates relative to today): 6 resources; a GPU workstation booking with a waitlisted rival; a pending DSLR request; a Seminar Hall booking ready for check-in; and a returned oscilloscope booking with two open incidents.
 
-## 4. A 5-minute judge walkthrough
+> ⚠️ **Testing tip:** cookies are shared across tabs of one browser. Use a **second browser or a private window** to stay signed in as two different users at once.
 
-1. **Eligibility.** Sign in as `student1@demo.edu`. Open **Resources**, search "I need to print an enclosure" with **Smart match** ticked. The 3D printer card says *Missing: 3D printer safety*. Open it and send a request: it is blocked and the exact reasons are recorded.
-2. **Request and compete.** As `student2@demo.edu`, open **Canon DSLR kit** and request the same slot as the seeded pending request (2 working days ahead, 10:00, 3 hours). The page explains that another request competes and shows the priority score.
-3. **Review with a reason.** Sign in as `owner@demo.edu`, open **Requests**, open a request and press **Approve** with a reason. The competing request moves to the waitlist automatically, with an explanation, and both students are notified.
-4. **OTP check-in.** As `student1@demo.edu`, open **My bookings > Seminar Hall A**. Record the condition before use (rating, notes, a photo), and note the 6-digit OTP. Sign in as `manager@demo.edu`, open the booking from **Requests > Ready for check-in**, type the OTP and check in.
-5. **Return and incident.** As `student1@demo.edu` return the item: rating, notes, a photo. Tick "damaged" or give a lower rating than before. An incident is opened automatically.
-6. **Human decision.** As `manager@demo.edu` confirm the return, then open **Incidents**. Press **Summarise the evidence** (advisory only), then resolve with *no action*, *warning* or *7-day suspension* and an explanation. Both parties are notified.
-7. **History.** Every booking page has a timeline. As `admin@demo.edu` open **Audit log** and **Statistics**.
+---
 
-## 5. How it meets the hackathon criteria
+## 🧪 5-Minute Judge Walkthrough
+
+1. **Eligibility check:** Sign in as `student1@demo.edu` → **Resources** → search *"I need to print an enclosure"* with **Smart match** on. The 3D printer card shows *Missing: 3D printer safety*. Send a request: it is **blocked with the exact reasons recorded**.
+2. **Competing requests:** As `student2@demo.edu`, request the **Canon DSLR kit** for the same slot as the seeded pending request (2 working days ahead, 10:00, 3 hours). The page explains the competition and shows the **priority score**.
+3. **Approve with a reason:** As `owner@demo.edu` → **Requests** → **Approve** with a reason. The rival request **moves to the waitlist automatically**, with an explanation, and both students are notified.
+4. **OTP check-in:** As `student1@demo.edu` → **My bookings → Seminar Hall A**. Record the **condition before use** (rating, notes, photo) and note the **6-digit OTP**. As `manager@demo.edu`, enter the OTP and **check in**.
+5. **Return and incident:** As `student1@demo.edu`, return the item with a **lower rating** or tick **damaged**. An **incident opens automatically**.
+6. **Human decision:** As `manager@demo.edu`, confirm the return → **Incidents** → **Summarise the evidence** (advisory only) → resolve as *no action*, *warning* or *7-day suspension* with an explanation.
+7. **Transparency:** Every booking has a **timeline**. As `admin@demo.edu`, open **Audit log** and **Statistics**.
+
+---
+
+## 🏆 Hackathon Criteria Mapping
 
 | Requirement | Where it lives |
 |---|---|
 | Listings with availability, location, rules, eligibility | `staff/resources/new`, `resources/[id]` |
 | Search, filters, smart matching | `resources/page.tsx`, `lib/ai.ts` (Gemini with keyword fallback) |
-| Verification and eligibility checks | ID verification, training proofs reviewed by an admin, checked server-side on every request (`actions/bookings.ts`) |
-| Approval, rejection, waitlist with reasons | `decideBooking`; a reason is mandatory and shown to the student |
-| Competing requests and conflicts | Overlap checks, automatic demotion of rivals, waitlist promotion on cancellation, plus a database exclusion constraint that makes double-booking impossible |
-| Check-in and check-out | OTP check-in, condition report before and after with photos |
-| Damage, delay, incidents | Automatic flags (late return, rating drop, damage tick), manual reports, human resolution |
+| Verification and eligibility checks | ID verification, admin-reviewed training proofs, checked **server-side on every request** (`actions/bookings.ts`) |
+| Approval, rejection, waitlist with reasons | `decideBooking`: a reason is mandatory and shown to the student |
+| Competing requests and conflicts | Overlap checks, automatic demotion of rivals, waitlist promotion on cancellation, **database exclusion constraint** |
+| Check-in and check-out | OTP check-in; before and after condition reports with photos |
+| Damage, delay, incidents | Automatic flags (late, rating drop, damage), manual reports, **human resolution** |
 | Notifications | In-app: approvals, rejections, waitlist moves, reminders, overdue, incidents |
-| Fair usage | Weekly hour cap, active-booking limit, one booking per day on high-demand items, visible priority score |
-| Roles | Student, owner, manager, admin with separate screens and server checks |
-| Audit trail | `audit_log` table, append-only (a database trigger rejects edits and deletes) |
-| Privacy and security | Row Level Security on every table, private storage with short-lived signed URLs, service key only on the server |
+| Fair usage | Weekly cap, active-booking limit, per-day limit on busy items, visible priority score |
+| Roles | Student, owner, manager, admin: separate screens and server checks |
+| Audit trail | Append-only `audit_log` (trigger rejects edits and deletes) |
+| Privacy and security | RLS on every table, private storage, signed URLs, server-only service key |
 
-### Fairness rules (all visible to the user)
+---
 
-`Priority = purpose weight (course project 50, research 40, personal 20) + waiting time (+2 per day, max +10) - recent use of that resource (2 per hour in the last 30 days, max -30)`
+## ☁️ Deployment
 
-When two requests want one slot, the owner sees both scores. The student sees their own breakdown and, if waitlisted, their rank ("#2 of 3"). The owner can always decide differently, and must give a reason, which is logged.
+**Deploy to Vercel (judge-accessible link):**
 
-### AI, used lightly and never as the decision-maker
-
-- Smart match (resource search) and incident summary use Gemini when `GEMINI_API_KEY` is set.
-- Without a key, search falls back to keyword matching and the summary falls back to a plain recap.
-- AI never approves, rejects, penalises or suspends anyone. Those are always human actions.
-
-## 6. Deploy to Vercel (judge-accessible link)
-
-1. Push this folder to a GitHub repository (the `.gitignore` already excludes `.env.local`).
-2. On https://vercel.com choose **Add New > Project**, import the repository.
+1. Push the repository to GitHub (`.gitignore` already excludes `.env.local`).
+2. On [vercel.com](https://vercel.com) choose **Add New → Project** and import the repository.
 3. Add the same environment variables as in `.env.local`.
-4. Deploy. Then run `npm run seed` locally once (it writes to your Supabase project, so it already applies to the deployed site).
-5. Optional: call `https://YOUR-SITE/api/cron` from a free scheduler to send reminders and overdue flags on time. Without it they run whenever anyone opens a page.
+4. Deploy. Run `npm run seed` locally once; it writes to your Supabase project, so it applies to the deployed site too.
+5. *(Optional)* Call `https://YOUR-SITE/api/cron` from a free scheduler to send reminders and overdue flags on time. Without it they run whenever anyone opens a page.
 
-## 7. Project layout
+**Tip:** create the Vercel project in the **region closest to your Supabase project** (Project Settings → Functions → Region) for the best speed.
+
+---
+
+## 📁 Project Structure
 
 ```
-supabase/schema.sql        tables, RLS policies, triggers, storage bucket
-scripts/seed.mjs           demo users and data
-src/middleware.ts          session refresh and login redirect
-src/lib/                   fairness rules, time helpers, audit/notify, AI, storage, maintenance
-src/app/actions/           all server actions (the only code that writes data)
-src/app/(app)/             signed-in pages: resources, bookings, staff, incidents, admin
-src/components/            small shared UI pieces
+Campus-Resources-Hub/
+├── supabase/
+│   ├── schema.sql              # tables, RLS policies, triggers, storage bucket
+│   └── migration_00X_*.sql     # upgrade scripts for older databases
+├── scripts/
+│   └── seed.mjs                # demo users and fictional data
+├── docs/
+│   └── PROJECT_DOCUMENT.md     # hackathon project document (fill the brackets)
+└── src/
+    ├── middleware.ts           # session refresh and login redirect
+    ├── lib/                    # fairness rules, time helpers, audit, AI, storage, queue
+    ├── components/             # shared UI components
+    └── app/
+        ├── actions/            # ALL server actions (the only code that writes data)
+        ├── (app)/              # signed-in pages: resources, bookings, staff, incidents, admin
+        ├── login/  signup/  invite/  deactivated/
+        └── api/cron/           # reminders and overdue flags
 ```
 
-All writes happen in server actions that first check the signed-in person's role and their relationship to the resource, and only then use the service key. The browser never gets the service key.
+---
 
-## 7a. Branding, responsive layout and speed
+## 🤝 Team and Contribution Workflow
 
-- **Your college name:** set `NEXT_PUBLIC_COLLEGE_NAME` and `NEXT_PUBLIC_COLLEGE_SHORT` in `.env.local` (and in Vercel). The header, footer, login, registration and landing page update automatically. Colours live in `tailwind.config.ts`.
-- **Public landing page (`/`):** explains the purpose, workflow, features, roles and fairness rules to first-time visitors. Signed-in users are sent straight to Resources.
-- **Mobile:** the header becomes a menu button on screens narrower than 1280px; tables scroll sideways inside their card; forms and cards stack on phones.
-- **Active page highlight:** the current page is highlighted in the navigation bar (gold underline).
-- **Speed tips:**
-  - `npm run dev` compiles each page the first time you open it, so it feels slow. For demos run `npm run build && npm start`, or use the deployed Vercel site.
-  - Create the Vercel project in the region closest to your Supabase project (Project Settings > Functions > Region).
-  - Each page now loads its data in parallel, the signed-in profile is fetched once per request, and a loading skeleton appears instantly while the next page loads.
+### Team
 
-## 8. Troubleshooting
-
-- **"Invalid login credentials" for demo users:** run `npm run seed` again and check that `.env.local` points at the same Supabase project where you ran `schema.sql`.
-- **"relation ... does not exist":** `schema.sql` was not run, or failed partway. Run it again in a new SQL Editor query.
-- **Sign-up says to confirm your email:** do Step 3.
-- **Photos fail to upload:** confirm the `evidence` bucket exists (Storage tab). `schema.sql` creates it; you can also create a private bucket with that name by hand.
-- **Times look shifted:** set `NEXT_PUBLIC_TZ_OFFSET_MIN` to your offset and restart `npm run dev`.
-- **`npm run seed` says unknown option `--env-file`:** your Node is older than 20.6. Upgrade Node.
-
-## 9. Known limitations (be upfront with judges)
-
-- In-app notifications only; no email or SMS delivery.
-- Bookings are free; deposits are a rule written on the listing, not a payment.
-- One college. Resource listings can be hidden or shown but not edited after creation.
-- The check-in OTP is stored as plain text in the database (fine for a prototype; hash it for production).
-- Photo auto-deletion after a retention period is not implemented.
-- Reminders and overdue flags run on page loads or when `/api/cron` is called.
-
-## 10. Disclosure for the submission
-
-This codebase was generated with AI assistance (Claude) and then configured and tested by the team. Libraries used: Next.js, React, Tailwind CSS, `@supabase/ssr`, `@supabase/supabase-js`, IBM Plex fonts via `next/font`. No templates or pre-existing project code. Demo data is fictional. Declare the AI assistance in your submission form, as the rules require.
-
-
-## Owner-managed manager access
-
-Public registration offers only **Student** and **Resource Owner**. Admin accounts must be provisioned by the platform operator; manager accounts are not available through public signup.
-
-A verified owner can open **Team management** in the dashboard and create an invitation for a manager email. The invitation link is single-use, expires after 7 days, and is stored in the database as a SHA-256 token hash. This project does not include an email delivery provider, so the owner must copy and share the generated link privately. The invited person creates an account or signs in using the invited email address. Pending invitations do not grant access.
-
-The `manager_invitations` and `owner_managers` tables are included in `supabase/schema.sql`. Run the updated schema in Supabase SQL Editor before using team management. A manager can have only one active owner assignment; the owner can revoke access. Permissions for booking decisions, check-in/returns, and incidents are checked by server actions, and resource assignment is limited to the inviting owner's active managers.
-
-
-### Owner verification flow update
-
-For an existing Supabase database, run `supabase/migration_004_owner_verification_types.sql and `supabase/migration_005_student_college_id_upload.sql`` after the previous migrations. New databases should use the updated `supabase/schema.sql`. Public signup has only Student and Resource Owner. Owners choose College staff, Organisation/business, or Individual and submit the relevant proof for admin review.
-
-
-## Admin: users, profiles and account status
-
-The admin area has two tabs:
-
-- **Registration requests**: new students (college ID card) and owner applications (documents by owner type) waiting for a decision, plus training proofs. Approve or reject with a reason.
-- **All users**: every account, with coloured tags for **role** (student, owner, manager, admin), **owner type**, **Active / Deactivated**, **Verified / Not verified**, **booking suspended**, **request pending or rejected**, and warnings. Search by name, email, college or staff ID, and filter by role and status.
-
-From the list you can open **View profile** (details, uploaded documents, training certificates, bookings, incidents, listings and team, recent activity) or **Deactivate** with a reason.
-
-**Deactivating an account** blocks sign-in (profile flag and Supabase auth ban), cancels the person's open bookings (freeing waitlisted slots), hides an owner's listings and ends manager links, and writes to the audit log. **Reactivate** restores sign-in; an owner shows their listings again themselves. Admin accounts cannot be deactivated from the app, and nobody can deactivate themselves.
-
-## Upgrading from the previous zip
-
-1. In the Supabase SQL Editor run `supabase/migration_006_account_status.sql` once (adds `is_active` and related columns).
-2. Run `npm install`, then `npm run seed` again (adds owner-type applicants and one deactivated demo user).
-3. Restart the app.
-
-## What changed in this version (speed, feedback and fixes)
-
-**Why pages felt slow:** every page asked Supabase "who is this?" several times before loading its data, and some pages loaded their data one query after another. Now the middleware checks the session once and passes the verified user id to the page, the profile is loaded once per request, and pages load their data in parallel.
-
-**Why buttons felt dead:** only some buttons showed any reaction. Now:
-- a gold progress bar runs along the top the moment you click a link or submit a form;
-- the clicked navigation link lights up immediately with a small spinner;
-- every action button shows a spinner and a "Working..." label, is blocked from double-clicks, and shows a pressed effect on tap. In forms with several buttons (Approve / Reject) only the pressed one spins.
-
-**Tip:** `npm run dev` compiles each page the first time it opens, which is slow by nature. For demos run `npm run build && npm start`, or use the deployed Vercel site. On Vercel, choose the function region closest to your Supabase project.
-
-**Bugs fixed:**
-- Manager invitation links redirected new people to the login page, so a new manager could never accept. `/invite/...` is now public.
-- "Become an owner" asked only staff questions and never saved the owner type, so the admin saw "Not specified". It now uses the same owner-type form and checks as registration.
-- A student whose college ID was pending could not open the owner application; a student whose ID was rejected had no way to send it again. Both fixed on the same page.
-- The audit log showed raw codes for manager invitation events. Readable labels added.
-- Team management page styling and date formats made consistent.
-- Changing an owner back to a student while they still have listings is now refused with an explanation.
-- Admin Verify and Role buttons now return you to the page you were on.
-
-## Owner types are shown everywhere
-
-There are three kinds of resource owner, and the app always shows the specific kind instead of just "owner":
-
-| Owner type | Label shown | Colour |
+| Member | Role | Area |
 |---|---|---|
-| College staff (HOD, lab head, faculty) | **College staff owner** | indigo |
-| Organisation or business (makerspace, startup, NGO, shop) | **Organisation owner** | orange |
-| Individual who owns equipment | **Individual owner** | green |
+| **Abhishek** *(Team lead)* | Foundation, database, shared libs | `supabase/`, `src/lib/`, config |
+| **Member 2** | Auth and onboarding | login, signup, invites, team, notifications |
+| **Member 3** | Resources and bookings | resources, bookings, requests, trainings |
+| **Member 4** | Admin and incidents | admin panel, audit, stats, incidents |
 
-You will see the type in: the admin **Registration requests** ("Wants: Organisation owner", button "Approve as Organisation owner"), the approval and notification messages, the **All users** list (tag, owner-type filter and counts), the user profile page, the header role chip, the pending-request banner, and on a resource page next to the name of whoever listed it.
+> Replace the names above with your team's real names and GitHub profiles.
 
-## Sign-in stability fix
+### Git workflow
 
-Some people were being sent back to the login page after the admin approved them, and approved owners could not get in. Changes:
+We use **feature branches and Pull Requests**; nobody pushes directly to `main`.
 
-- The signed-in person's profile is now loaded by their verified id with the service role. A row-level-security or expired-token hiccup inside a page can no longer make a valid session look "logged out".
-- If the middleware header is ever missing, the app asks Supabase Auth directly instead of redirecting to login.
-- A temporary Supabase or network error in the middleware no longer counts as "not signed in".
-- Sign out now ends only this browser's session (it used to end the person's sessions on every device).
-- The login and register pages send an already signed-in person straight into the app.
+```bash
+git clone https://github.com/akabhishek2316/Campus-Resources-Hub.git
+cd Campus-Resources-Hub
+git checkout -b feature/<your-feature>
 
-**Testing tip:** cookies are shared by every tab of one browser. If you sign in as the admin in the same browser where the student or owner is signed in, the student or owner is replaced by the admin session. Use a second browser, or a private window, for the second account. After updating, sign out and sign in once so old cookies are replaced.
+# ...make changes...
+git add .
+git commit -m "Clear message about what changed"
+git push -u origin feature/<your-feature>
+```
 
+Then open a **Pull Request** into `main` on GitHub. The lead reviews and merges.
 
-## Training requests (owner to admin)
+**Branch naming:** `feature/auth-onboarding` · `feature/resources-bookings` · `feature/admin-incidents`
 
-Only the admin can create trainings, but an owner may need one that does not exist yet (for example "Laser cutter safety" for a laser cutter they want to share).
+**Code style:** a [`.prettierrc`](.prettierrc) is included. Please install the VS Code **Prettier** extension and enable *Format on Save* to avoid noisy diffs.
 
-1. Owner opens **Request training**, enters the training name and which item it is for.
-2. The admin sees it under **Admin > Training requests from owners**, may edit the name, then **approves** (the training is created and appears in the list) or **rejects with a reason**.
-3. The owner is notified. After approval the owner ticks the training as required when listing the resource, so users must upload an approved certificate before booking it.
-4. Every request and decision is written to the audit log.
+---
 
-Upgrading: run `supabase/migration_007_training_requests.sql` once (or re-run `schema.sql`), then `npm run seed`.
+## ⚠️ Known Limitations
+
+We are upfront about the scope of this prototype:
+
+- **In-app notifications only**; no email or SMS delivery yet
+- Bookings are **free**; a deposit is a rule on the listing, not a payment
+- **Single college**; resource listings can be hidden or shown but not edited after creation
+- The check-in **OTP is stored in plain text** (acceptable for a prototype; should be hashed in production)
+- **Photo retention** (auto-delete after a period) is not implemented
+- Reminders and overdue flags run on page loads or when `/api/cron` is called
+
+## 🗺️ Roadmap
+
+- [ ] Email and WhatsApp notifications
+- [ ] IoT smart-lock handover
+- [ ] Cross-college resource sharing
+- [ ] Credit-based allocation
+- [ ] Hashed OTPs
+- [ ] Photo retention policy
+- [ ] Calendar view for availability
+- [ ] Edit listings after creation
+
+---
+
+## 🩺 Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| "Invalid login credentials" for demo users | Run `npm run seed` again; make sure `.env.local` points to the **same** Supabase project where you ran `schema.sql` |
+| `relation ... does not exist` | `schema.sql` was not run or failed midway. Run it again in a new SQL Editor query |
+| Sign-up asks to confirm email | Turn off **Confirm email** (Authentication → Providers → Email) |
+| Photos fail to upload | Confirm the private `evidence` bucket exists in Storage (`schema.sql` creates it) |
+| Times look shifted | Set `NEXT_PUBLIC_TZ_OFFSET_MIN` to your offset and restart |
+| `--env-file` unknown option on seed | Your Node is older than 20.6; upgrade Node |
+| Sent back to login after approval | Sign out and sign in once so old cookies are replaced; use a separate browser for each role |
+
+---
+
+## 📜 Disclosure
+
+- This codebase was generated with **AI assistance (Claude)** and then configured, tested and reviewed by the team. AI use is declared as the hackathon rules require.
+- Libraries: Next.js, React, Tailwind CSS, `@supabase/ssr`, `@supabase/supabase-js`, IBM Plex fonts via `next/font`.
+- No pre-existing templates or project code were used.
+- All demo data is **fictional**.
+
+---
+
+<div align="center">
+
+**Built for the "Unlock Underused Equipment and Spaces" hackathon.**
+
+*Share more. Waste less. Trust by design.*
+
+</div>
