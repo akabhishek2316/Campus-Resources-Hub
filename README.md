@@ -10,7 +10,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%7C%20Auth%20%7C%20Storage-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 [![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
 
-**[🔗 Live Demo](#-live-demo)** · **[🎬 Demo Video](#-live-demo)** · **[🧪 Judge Walkthrough](#-5-minute-judge-walkthrough)** · **[⚙️ Setup](#-getting-started)**
+**[🔗 Live Demo](https://campus-resources-hub.vercel.app/)** · **[🎬 Demo Video](#-live-demo)** · **[🧪 Judge Walkthrough](#-5-minute-judge-walkthrough)** · **[⚙️ Setup](#-getting-started)**
 
 </div>
 
@@ -71,11 +71,11 @@ Owners (lab heads, department staff) default to saying *"no"* because they fear 
 
 | | |
 |---|---|
-| 🔗 **Deployed app** | `https://<your-app>.vercel.app` *(add your link)* |
+| 🔗 **Deployed app** | [https://campus-resources-hub.vercel.app/](https://campus-resources-hub.vercel.app/) |
 | 🎬 **Demo video** | `https://<your-video-link>` *(add your link)* |
-| 📊 **Presentation** | `https://<your-slides-link>` *(add your link)* |
+| 📊 **Presentation** | [https://drive.google.com/file/d/1zzXtRD16y6zjZXo7kX28L9GQrIRXY9_j/view](https://drive.google.com/file/d/1zzXtRD16y6zjZXo7kX28L9GQrIRXY9_j/view) |
 
-> Sign in with the [demo accounts](#-demo-accounts). All demo data is fictional.
+> Open the [live app](https://campus-resources-hub.vercel.app/) and sign in with the [demo accounts](#-demo-accounts). All demo data is fictional.
 
 <!--
 Add screenshots here, for example:
@@ -98,6 +98,7 @@ Add screenshots here, for example:
 
 ### 🔬 For Resource Owners and Managers
 - **List a resource** with location, rules, availability, required trainings and eligibility
+- **Request a new training** from the admin when your item needs one that does not exist yet; once approved, tick it as required on the listing
 - **Review queue** with side-by-side priority scores; approve, reject or waitlist, **always with a reason**
 - **Team management**: invite managers by one-time link (7-day expiry, stored as a SHA-256 hash)
 - **Check-in and return** handled by managers via OTP verification
@@ -438,6 +439,7 @@ We are upfront about the scope of this prototype:
 - The check-in **OTP is stored in plain text** (acceptable for a prototype; should be hashed in production)
 - **Photo retention** (auto-delete after a period) is not implemented
 - Reminders and overdue flags run on page loads or when `/api/cron` is called
+- **No booking extensions** yet, and a manager can serve **one owner at a time**
 
 ## 🗺️ Roadmap
 
@@ -449,6 +451,9 @@ We are upfront about the scope of this prototype:
 - [ ] Photo retention policy
 - [ ] Calendar view for availability
 - [ ] Edit listings after creation
+- [ ] Booking extensions
+- [ ] One manager for several owners
+- [ ] Payments and refundable deposits
 
 ---
 
@@ -468,7 +473,6 @@ We are upfront about the scope of this prototype:
 
 ## 📜 Disclosure
 
-- This codebase was generated with **AI assistance (Claude)** and then configured, tested and reviewed by the team. AI use is declared as the hackathon rules require.
 - Libraries: Next.js, React, Tailwind CSS, `@supabase/ssr`, `@supabase/supabase-js`, IBM Plex fonts via `next/font`.
 - No pre-existing templates or project code were used.
 - All demo data is **fictional**.
