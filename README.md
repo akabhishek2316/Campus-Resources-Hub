@@ -10,7 +10,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%7C%20Auth%20%7C%20Storage-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 [![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
 
-**[🔗 Live Demo](https://campus-resources-hub.vercel.app/)** · **[🎬 Demo Video](#-live-demo)** · **[🧪 Judge Walkthrough](#-5-minute-judge-walkthrough)** · **[⚙️ Setup](#-getting-started)**
+**[🔗 Live Demo](https://campus-resources-hub.vercel.app/)** · **[🎬 Demo Video](https://res.cloudinary.com/dufaoaswk/video/upload/v1793348061/ResourcesHub_Presentation_Video_FINAL_rvsaaw.mp4)** · **[🧪 Judge Walkthrough](#-5-minute-judge-walkthrough)** · **[⚙️ Setup](#-getting-started)**
 
 </div>
 
@@ -72,7 +72,7 @@ Owners (lab heads, department staff) default to saying *"no"* because they fear 
 | | |
 |---|---|
 | 🔗 **Deployed app** | [https://campus-resources-hub.vercel.app/](https://campus-resources-hub.vercel.app/) |
-| 🎬 **Demo video** | `https://<your-video-link>` *(add your link)* |
+| 🎬 **Demo video** | [https://res.cloudinary.com/dufaoaswk/video/upload/v1793348061/ResourcesHub_Presentation_Video_FINAL_rvsaaw.mp4](https://res.cloudinary.com/dufaoaswk/video/upload/v1793348061/ResourcesHub_Presentation_Video_FINAL_rvsaaw.mp4) |
 | 📊 **Presentation** | [https://drive.google.com/file/d/1zzXtRD16y6zjZXo7kX28L9GQrIRXY9_j/view](https://drive.google.com/file/d/1zzXtRD16y6zjZXo7kX28L9GQrIRXY9_j/view) |
 
 > Open the [live app](https://campus-resources-hub.vercel.app/) and sign in with the [demo accounts](#-demo-accounts). All demo data is fictional.
@@ -399,10 +399,10 @@ Campus-Resources-Hub/
 
 | Member | Role | Area |
 |---|---|---|
-| **Abhishek** *(Team lead)* | Foundation, database, shared libs | `supabase/`, `src/lib/`, config |
-| **Member 2** | Auth and onboarding | login, signup, invites, team, notifications |
-| **Member 3** | Resources and bookings | resources, bookings, requests, trainings |
-| **Member 4** | Admin and incidents | admin panel, audit, stats, incidents |
+| **Abhishek Kumar** *(Team lead)* | Foundation, database, shared libs | `supabase/`, `src/lib/`, config |
+| **Aditya Singh** | Auth and onboarding | login, signup, invites, team, notifications |
+| **Aryan Chaurasiya** | Resources and bookings | resources, bookings, requests, trainings |
+| **Ranjeet Kushwaha** | Admin and incidents | admin panel, audit, stats, incidents |
 
 > Replace the names above with your team's real names and GitHub profiles.
 
